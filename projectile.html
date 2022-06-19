@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
     <title>Projectile motion</title>
     <style>
       * {
@@ -42,38 +43,58 @@
         outline: none;
         transition: all 400ms;
       }
+      .chart-container {
+        position: relative;
+        width: 400;
+        height: 300;
+      }
+      .canvas {
+        width: 400;
+        height: 300;
+      }
       .test {
-        
         width: 10px;
         height: 10px;
         margin: 50px;
         border-radius: 50%;
         background-color: black;
-        animation: path 4s infinite linear;
+        animation: pathX 4s infinite linear;
+        
       }
-
-      .test:nth-child(2) {
-        animation: path2 4s infinite linear;
+      .wrapper{
+        animation: pathY 4s infinite linear;
+        position: absolute;
+        bottom: 0;
       }
-
-      @keyframes path {
+       @keyframes pathY {
+        0%{
+          transform: translateY(25px);
+        }
+        50%{
+          transform: translateY(-190px);
+        }
+        100%{
+          transform: translateY(25px);
+        }
+      } 
+      @keyframes pathX {
         from {
-          transform: translate(0px, 0px) rotate(180deg) translateX(50px);
+          transform:  translateX(-25px);
         }
         to {
-          transform: translate(100px, 0px) rotate(360deg) translateX(50px);
-        }
-      }
-
-      @keyframes path2 {
-        from {
-          transform: translate(0px, 0px) rotate(180deg) translateX(50px);
-        }
-        to {
-          transform: translate(50px, 60px) rotate(360deg) translateX(80px);
+          transform: translateX(430px);
         }
       }
     </style>
+    <script>
+      const vel = 30;
+      const angle = 30;
+      const radianAngle = (angle * Math.PI) / 180;
+      const h = (Math.pow(vel * Math.sin(radianAngle), 2) / (2 * 9.8)).toFixed(
+        2
+      );
+      const d = ((4 * h) / Math.tan(radianAngle)).toFixed(2);
+    </script>
   </head>
   <body>
     <div class="container">
@@ -84,9 +105,35 @@
 
         <button type="button" class="btn btn-default">Start</button>
         <button type="button" class="btn btn-default">Reset</button>
-        <div class="test"></div>
-        <div class="test"></div>
+        <div class="chart-container">
+          <div class="wrapper">
+            <div class="test"></div>
+          </div>
+          <canvas id="myChart" class="canvas"></canvas>
+        </div>
       </form>
     </div>
+    <script>
+      // Our labels along the x-axis
+      var xAxis = [d / 4, d / 2, (3 * d) / 4, d];
+      // For drawing the lines
+      var yAxis = [h / 2, h, h / 2, 0];
+
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: xAxis,
+          datasets: [
+            {
+              data: yAxis,
+              label: "Height",
+              borderColor: "#3e95cd",
+              fill: false,
+            },
+          ],
+        },
+      });
+    </script>
   </body>
 </html>
