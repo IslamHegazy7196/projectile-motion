@@ -44,6 +44,7 @@
         transition: all 400ms;
       }
       .chart-container {
+        display: none;
         position: relative;
         width: 400;
         height: 300;
@@ -59,53 +60,56 @@
         border-radius: 50%;
         background-color: black;
         animation: pathX 4s infinite linear;
-        
       }
-      .wrapper{
+      .wrapper {
         animation: pathY 4s infinite linear;
         position: absolute;
         bottom: 0;
       }
-       @keyframes pathY {
-        0%{
+      @keyframes pathY {
+        0% {
           transform: translateY(25px);
         }
-        50%{
+        50% {
           transform: translateY(-190px);
         }
-        100%{
+        100% {
           transform: translateY(25px);
         }
-      } 
+      }
       @keyframes pathX {
         from {
-          transform:  translateX(-25px);
+          transform: translateX(-25px);
         }
         to {
           transform: translateX(430px);
         }
       }
     </style>
-    <script>
-      const vel = 30;
-      const angle = 30;
-      const radianAngle = (angle * Math.PI) / 180;
-      const h = (Math.pow(vel * Math.sin(radianAngle), 2) / (2 * 9.8)).toFixed(
-        2
-      );
-      const d = ((4 * h) / Math.tan(radianAngle)).toFixed(2);
-    </script>
   </head>
   <body>
     <div class="container">
       <h1>Projectile motion</h1>
       <form class="form">
-        <input type="text" placeholder="Angle" class="input" id="angl" />
-        <input type="text" placeholder="Velocity" class="input" id="vel" />
+        <input
+          type="text"
+          placeholder="Angle"
+          min="0"
+          max="360"
+          class="input"
+          id="angl"
+        />
+        <input
+          type="text"
+          placeholder="Velocity"
+          min="0"
+          class="input"
+          id="vel"
+        />
 
-        <button type="button" class="btn btn-default">Start</button>
-        <button type="button" class="btn btn-default">Reset</button>
-        <div class="chart-container">
+        <button type="button" class="btn btn-default" id="btn1">Start</button>
+        <button type="button" class="btn btn-default" id="btn2">Reset</button>
+        <div class="chart-container" id="chart">
           <div class="wrapper">
             <div class="test"></div>
           </div>
@@ -114,25 +118,45 @@
       </form>
     </div>
     <script>
-      // Our labels along the x-axis
-      var xAxis = [d / 4, d / 2, (3 * d) / 4, d];
-      // For drawing the lines
-      var yAxis = [h / 2, h, h / 2, 0];
+      const start = document.getElementById("btn1");
+      const reset = document.getElementById("btn2");
+      const container = document.getElementById("chart");
+      btn1.addEventListener("click", function () {
+        const vel = document.getElementById("vel").value;
+        const angle = document.getElementById("angl").value;
+        const radianAngle = (angle * Math.PI) / 180;
+        const h = (
+          Math.pow(vel * Math.sin(radianAngle), 2) /
+          (2 * 9.8)
+        ).toFixed();
+        const d = ((4 * h) / Math.tan(radianAngle)).toFixed();
+        // Our labels along the x-axis
+        const xAxis = [d / 4, d / 2, (3 * d) / 4, d];
+        // For drawing the lines
+        const yAxis = [h / 2, h, h / 2, 0];
 
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: xAxis,
-          datasets: [
-            {
-              data: yAxis,
-              label: "Height",
-              borderColor: "#3e95cd",
-              fill: false,
-            },
-          ],
-        },
+        const ctx = document.getElementById("myChart");
+        const myChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: xAxis,
+            datasets: [
+              {
+                data: yAxis,
+                label: "Height",
+                borderColor: "#3e95cd",
+                backgroundColor: "transparent",
+                fill: false,
+              },
+            ],
+          },
+        });
+        container.style.display = "block";
+      });
+      btn2.addEventListener("click", function () {
+        document.getElementById("vel").value = 0;
+        document.getElementById("angl").value = 0;
+        container.style.display = "none";
       });
     </script>
   </body>
