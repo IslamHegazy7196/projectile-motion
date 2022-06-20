@@ -27,6 +27,8 @@
         margin-bottom: 0;
       }
       h1 {
+        font-family: cursive;
+        font-size: 60px;
         margin: auto;
         align-items: center;
         justify-content: center;
@@ -35,7 +37,6 @@
       .input {
         border: none;
         margin: 2em;
-        /* margin-top:1em; */
         margin-bottom: 1em;
         padding: 0.5em;
         color: black;
@@ -70,19 +71,24 @@
         0% {
           transform: translateY(25px);
         }
-        50% {
+
+        48% {
           transform: translateY(-190px);
         }
+        52% {
+          transform: translateY(-190px);
+        }
+
         100% {
           transform: translateY(25px);
         }
       }
       @keyframes pathX {
         from {
-          transform: translateX(-25px);
+          transform: translateX(-20px);
         }
         to {
-          transform: translateX(430px);
+          transform: translateX(440px);
         }
       }
     </style>
@@ -91,21 +97,8 @@
     <div class="container">
       <h1>Projectile motion</h1>
       <form class="form">
-        <input
-          type="text"
-          placeholder="Angle"
-          min="0"
-          max="360"
-          class="input"
-          id="angl"
-        />
-        <input
-          type="text"
-          placeholder="Velocity"
-          min="0"
-          class="input"
-          id="vel"
-        />
+        <input type="number" placeholder="Angle (deg)" class="input" id="angl" />
+        <input type="number" placeholder="Velocity (m/s)" class="input" id="vel" />
 
         <button type="button" class="btn btn-default" id="btn1">Start</button>
         <button type="button" class="btn btn-default" id="btn2">Reset</button>
@@ -121,15 +114,23 @@
       const start = document.getElementById("btn1");
       const reset = document.getElementById("btn2");
       const container = document.getElementById("chart");
-      btn1.addEventListener("click", function () {
+      // functions
+      const startBtn = () => {
         const vel = document.getElementById("vel").value;
         const angle = document.getElementById("angl").value;
+        // validation
+        if (angle > 90 || angle < 0 || vel <= 0) {
+          alert("please input valid values");
+          return;
+        }
         const radianAngle = (angle * Math.PI) / 180;
         const h = (
           Math.pow(vel * Math.sin(radianAngle), 2) /
           (2 * 9.8)
         ).toFixed();
         const d = ((4 * h) / Math.tan(radianAngle)).toFixed();
+        // CHART
+
         // Our labels along the x-axis
         const xAxis = [d / 4, d / 2, (3 * d) / 4, d];
         // For drawing the lines
@@ -143,8 +144,8 @@
             datasets: [
               {
                 data: yAxis,
-                label: "Height",
-                borderColor: "#3e95cd",
+                label: [],
+                borderColor: "transparent",
                 backgroundColor: "transparent",
                 fill: false,
               },
@@ -152,10 +153,12 @@
           },
         });
         container.style.display = "block";
-      });
-      btn2.addEventListener("click", function () {
-        document.getElementById("vel").value = 0;
-        document.getElementById("angl").value = 0;
+      };
+      // EventListeners
+      btn1.addEventListener("click", startBtn);
+      btn2.addEventListener("click", () => {
+        document.getElementById("vel").value = "";
+        document.getElementById("angl").value = "";
         container.style.display = "none";
       });
     </script>
